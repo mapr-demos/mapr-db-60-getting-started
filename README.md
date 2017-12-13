@@ -5,7 +5,7 @@
 This getting started will show you how to work with MapR-DB JSON using:
 
 * MapR-DB Shell to interact with JSON tables from the command line
-* Apache Drill to so some analytics with SQL
+* Apache Drill to run some analytics with SQL
 * Java and the OJAI library to build operational application.
 * Spark-DB connector to natively load / store RDDs to table.
 
