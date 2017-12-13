@@ -13,13 +13,13 @@ You will learn how to optimize query using MapR-DB Secondary indexes.
 
 **Prerequisites**
 
-* MapR Converged Data Platform 6.0 Beta with Apache Drill OR [MapR Developer Sandbox Container](https://maprdocs.mapr.com/home/MapRContainerDevelopers/MapRContainerDevelopersOverview.html).
+* MapR Converged Data Platform 6.0 with Apache Drill OR [MapR Developer Sandbox Container](https://maprdocs.mapr.com/home/MapRContainerDevelopers/MapRContainerDevelopersOverview.html).
 * JDK 8
 * Maven 3.x
 
 ## Setting up MapR Developer Sandbox Container
 
-MapR Developer Sandbox Container is an effort to get MapR running on your developer machine so that one could quickly get in to working within MapR environment.
+MapR Developer Sandbox Container is a docker image that enables you to quickly deploy a MapR environment on your developer machine.
 
 Installation, Setup and further information can be found [**here**](https://maprdocs.mapr.com/home/MapRContainerDevelopers/MapRContainerDevelopersOverview.html).
 
@@ -57,13 +57,13 @@ $ docker cp review.json <container-id>:/tmp/
 
 $ docker cp user.json <container-id>:/tmp/
 ```
-Similarly, we can copy the rest of files or copy the entire `dataset` directory.
+Another option is to copy the entire **dataset** directory.
 
 ##### 3b. Copy data in to MapR-XD
 
 There are two ways to put data in to MapR-XD
 
-- By simple copy if [**MapR NFS**](https://maprdocs.mapr.com/home/AdministratorGuide/AccessDataWithNFS.html) is installed and the cluster is mounted at `/mapr`.
+- Simple copy, if [**MapR NFS**](https://maprdocs.mapr.com/home/AdministratorGuide/AccessDataWithNFS.html) is installed and the cluster is mounted at `/mapr`.
 ```
 $ cp business.json /mapr/<cluster-name>/tmp/
 ```
@@ -73,7 +73,7 @@ When using developer sandbox container,
 $ cp business.json /mapr/maprdemo.mapr.io/tmp/
 ```
 
-- By running hadoop commands to put data.
+- Run hadoop commands to put the data.
 ```
 hadoop fs -put business.json /tmp/
 ```
@@ -110,7 +110,7 @@ In this section you will learn how to use DB shell to query JSON table but also 
 
 As mapr user in a terminal enter the following commands to get familiar with the shell.
 
-Even when running MapR as sandbox container, one could use DB shell from the host machine.
+If you are running MapR as a sandbox container, you can still use DB shell from the host machine.
 ```
 $ mapr dbshell
 
@@ -120,7 +120,7 @@ maprdb mapr:> find /apps/user --limit 2
 
 ```
 
-To learn more about the various commands, run `help`' or  help command , for example `help insert`.
+To learn more about the various commands, run `help`' or  `help <command>` , for example `help insert`.
 
 
 **1. Retrieve one document using its id**
@@ -279,19 +279,19 @@ The main change in the explain plan compare to previous queries is:
 
 OJAI the Java API used to access MapR-DB JSON, leverages the same query engine than MapR-DB Shell and Apache Drill. The various examples use the `/apps/user` user table.
 
-* `OJAI_001_YelpSimpleQuery` : return all the users with the `support` field equals to "gold". Note that the `support` field is a new field you are adding in the demonstration
-* `OJAI_002_YelpInsertAndQuery` : insert a new user in the table, with support set to gold and do the query. The query will not necessary returns the value from the index since it is indexed ascynchronously (see next example)
-* `OJAI_003_YelpInsertAndQueryRYOW` : insert a new user in the table, and do the query. This example use the "Tracking Writes" to be sure the query waits for the index to be updated
-* `OJAI_004_YelpQueryAndDelete` : delete the documents created in example 002 and 003.
-* `OJAI_005_YelpComplexQuery` : all restaurants that have take-outs and a rating greater than 3. Also calculates the percentage of restaurants that offer take out, out of all restaurants in Las Vegas that have take-out information available.
+* `OJAI_001_YelpSimpleQuery` : Retrieve all the users with the `support` field equals to "gold". Note that the `support` field is a new field you are adding in the demonstration
+* `OJAI_002_YelpInsertAndQuery` : Insert a new user in the table, with support set to gold and do the query. The query will not necessary returns the value from the index since it is indexed ascynchronously (see next example)
+* `OJAI_003_YelpInsertAndQueryRYOW` : Insert a new user in the table, and do the query. This example use the "Tracking Writes" to be sure the query waits for the index to be updated
+* `OJAI_004_YelpQueryAndDelete` : Delete the documents created in example 002 and 003.
+* `OJAI_005_YelpComplexQuery` : Retrieve all restaurants that have take-outs and a rating greater than 3. Also calculates the percentage of restaurants that offer take out, out of all restaurants in Las Vegas that have take-out information available.
 
 ## Working with Drill-JDBC
 
-* `DRILL_001_YelpSimpleQuery` : returns all businesses that have at least 100 reviews and a rating greater than 3.
+* `DRILL_001_YelpSimpleQuery` : Retrieve all businesses that have at least 100 reviews and a rating greater than 3.
 
 ## Working with Spark-DB Connector
 
-* `SPARK_001_YelpQueryRDD` : returns `city` with most restaurants rated more than 3 stars.
+* `SPARK_001_YelpQueryRDD` : Retrieve `city` with most restaurants rated higher than 3 stars.
 
 
 #### Run the sample application
@@ -302,7 +302,7 @@ OJAI the Java API used to access MapR-DB JSON, leverages the same query engine t
 $ mvn clean install
 ```
 
-This would create the following 3 jars.
+This creates the following 3 jars.
 - `drill-examples/target/drill-examples-1.0-SNAPSHOT.jar`
 - `ojai-examples/target/ojai-examples-1.0-SNAPSHOT.jar`
 - `spark-examples/target/spark-examples-1.0-SNAPSHOT.jar`
@@ -324,16 +324,16 @@ Change the name of the application to test the various examples.
 
 In this example you have learned how to:
 
-* use MapR-DB Shell to insert, update and query MapR-DB JSON Tables
-* add an index to improve queries performances
-* use Drill to query JSON Tables and see the impact of indexes
-* develop Java application with OJAI to query documents, and the impact of indexes on performance
+* Use MapR-DB Shell to insert, update and query MapR-DB JSON Tables
+* Add an index to improve queries performances
+* Use Drill to query JSON Tables and see the impact of indexes
+* Develop Java application with OJAI to query documents, and the impact of indexes on performance
 * track you writes to be sure the index is updated when you query the table and a document has been inserted/updated
-* develop Drill-JDBC application in Java
-* develop Spark-DB application in Scala
+* Develop Drill-JDBC application in Java
+* Develop Spark-DB application in Scala
 
 
-You can also looked at the following examples:
+You can also look at the following examples:
 
 * [Ojai 2.0 Examples](https://github.com/mapr-demos/ojai-2-examples) to learn more about OJAI 2.0 features
 * [MapR-DB Change Data Capture](https://github.com/mapr-demos/mapr-db-cdc-sample) to capture database events such as insert, update, delete and react to this events.
