@@ -4,11 +4,17 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
-  <groupId>com.mapr.demos</groupId>
+  <groupId>com.mapr.db.examples</groupId>
   <artifactId>mapr-db-getting-started</artifactId>
+  <packaging>pom</packaging>
   <version>1.0-SNAPSHOT</version>
 
-  <packaging>jar</packaging>
+  <modules>
+    <module>ojai-examples</module>
+    <module>drill-examples</module>
+    <module>spark-examples</module>
+  </modules>
+
   <name>Getting Started with MapR-DB 6.0 Beta</name>
 
   <licenses>
@@ -26,34 +32,25 @@
   </repositories>
 
   <properties>
-    <mapr.library.version>6.0.0-mapr-beta</mapr.library.version>
-    
+    <log4j.version>1.2.17</log4j.version>
+    <scala.version>2.11.5</scala.version>
+
+    <mapr.library.version>6.0.0-mapr</mapr.library.version>
+    <drill.version>1.11.0-mapr</drill.version>
+    <ojai.version>2.0-mapr-1710</ojai.version>
+    <spark.version>2.1.0-mapr-1710</spark.version>
+
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <maven.compiler.source>1.8</maven.compiler.source>
     <maven.compiler.target>1.8</maven.compiler.target>
   </properties>
 
   <dependencies>
-
-  <dependency>
-    <artifactId>mapr-ojai-driver</artifactId>
-    <groupId>com.mapr.ojai</groupId>
-    <version>${mapr.library.version}</version>
-  </dependency>
-  
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>3.8.1</version>
+      <scope>test</scope>
+    </dependency>
   </dependencies>
-
-  <build>
-    <plugins>
-      <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>exec-maven-plugin</artifactId>
-        <version>1.6.0</version>
-        <configuration>
-          <cleanupDaemonThreads>false</cleanupDaemonThreads>
-        </configuration>
-      </plugin>
-    </plugins>
-  </build>
-
-
 </project>

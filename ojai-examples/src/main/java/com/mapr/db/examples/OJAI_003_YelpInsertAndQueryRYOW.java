@@ -1,4 +1,4 @@
-package com.mapr.db.samples;
+package com.mapr.db.examples;
 
 import org.ojai.Document;
 import org.ojai.DocumentStream;
@@ -6,26 +6,29 @@ import org.ojai.store.Connection;
 import org.ojai.store.DocumentStore;
 import org.ojai.store.DriverManager;
 import org.ojai.store.Query;
-import org.ojai.store.QueryCondition;
 import org.ojai.store.QueryCondition.Op;
 
 import java.util.UUID;
 
 
 @SuppressWarnings("Duplicates")
-public class OJAI_002_YelpInsertAndQuery {
+public class OJAI_003_YelpInsertAndQueryRYOW {
+  public static final String OJAI_CONNECTION_URL = "ojai:mapr:";
+  //Full path including namespace /mapr/<cluster-name>/apps/business
+  public static final String TABLE_NAME = "/mapr/maprdemo.mapr.io/apps/user";
 
   public static void main(String[] args) {
 
     System.out.println("==== Start Application ===");
 
     // Create an OJAI connection to MapR cluster
-    Connection connection = DriverManager.getConnection("ojai:mapr:");
+    Connection connection = DriverManager.getConnection(OJAI_CONNECTION_URL);
 
     // Get an instance of OJAI
-    DocumentStore store = connection.getStore("/apps/user");
-
+    DocumentStore store = connection.getStore(TABLE_NAME);
+    store.beginTrackingWrites();
     // Create a new user with a new field "support" (not present in the default yelp dataset
+
     // generate random UUI to see new documents
     String newDocUUID = UUID.randomUUID().toString();
 
@@ -42,9 +45,13 @@ public class OJAI_002_YelpInsertAndQuery {
     store.insertOrReplace(newUserDocument);
     store.flush();
 
+
+    String commitContext = store.endTrackingWrites();
+
     Query query = connection.newQuery()
             .select("name", "yelping_since", "support") // projection
             .where( connection.newCondition().is("support", Op.EQUAL, "gold").build()    ) // condition
+            .waitForTrackedWrites(commitContext)
             .build();
 
     long startTime = System.currentTimeMillis();
