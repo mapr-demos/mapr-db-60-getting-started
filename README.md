@@ -63,7 +63,7 @@ Similarly, we can copy the rest of files or copy the entire `dataset` directory.
 
 There are two ways to put data in to MapR-XD
 
-- By simple copy if [NFS service is installed](https://maprdocs.mapr.com/home/AdministratorGuide/AccessDataWithNFS.html) and the cluster is mounted at `/mapr`.
+- By simple copy if [**MapR NFS**](https://maprdocs.mapr.com/home/AdministratorGuide/AccessDataWithNFS.html) is installed and the cluster is mounted at `/mapr`.
 ```
 $ cp business.json /mapr/<cluster-name>/tmp/
 ```
