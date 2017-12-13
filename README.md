@@ -89,8 +89,19 @@ $ mapr importJSON -idField review_id -src /tmp/review.json -dst /apps/review -ma
 $ mapr importJSON -idField user_id -src /tmp/user.json -dst /apps/user -mapreduce false
 
 ```
+> Refer to [**Loading Documents in to JSON Tables**](https://maprdocs.mapr.com/home/MapR-DB/JSON_DB/loading_documents_into_json_tables.html) for more details.
 
 You have now 3 JSON tables, let's query these tables using SQL with Apache Drill.
+
+#### 5. Give user permissions / public permissions to allow read / write.
+MapR-DB JSON tables have permissions associated in order restrict / allow access to tables / data. You can find more information [**here**](https://maprdocs.mapr.com/home/SecurityGuide/EnablingTableAuthorizations.html).
+
+To make it simple for now let us changes the `readperm` and `writeperm` to `public` access. This means that anyone can read from table and write to the table. We change the permissions for the `default` column family because all of the data in our case resides in default cf.
+```
+maprcli table cf edit -path /tmp/business_table -cfname default -readperm p -writeperm p
+```
+
+> Refer to [**table cf edit command**](https://maprdocs.mapr.com/home/ReferenceGuide/table-cf-edit.html) for more details about the CLI command.
 
 
 ## MapR DB Shell
