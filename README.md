@@ -17,9 +17,9 @@ You will learn how to optimize query using MapR-DB Secondary indexes.
 * JDK 8
 * Maven 3.x
 
-## Setting up MapR Developer Sandbox Container
+## Setting up MapR Container For Developers
 
-MapR Developer Sandbox Container is a docker image that enables you to quickly deploy a MapR environment on your developer machine.
+MapR Container For Developers is a docker image that enables you to quickly deploy a MapR environment on your developer machine.
 
 Installation, Setup and further information can be found [**here**](https://maprdocs.mapr.com/home/MapRContainerDevelopers/MapRContainerDevelopersOverview.html).
 
@@ -68,7 +68,7 @@ There are two ways to put data in to MapR-XD
 $ cp business.json /mapr/<cluster-name>/tmp/
 ```
 
-When using developer sandbox container,
+When using the MapR Container For Developers,
 ```
 $ cp business.json /mapr/maprdemo.mapr.io/tmp/
 ```
@@ -110,7 +110,7 @@ In this section you will learn how to use DB shell to query JSON table but also 
 
 As mapr user in a terminal enter the following commands to get familiar with the shell.
 
-If you are running MapR as a sandbox container, you can still use DB shell from the host machine.
+If you are running MapR as container, you can still use DB shell from the host machine.
 ```
 $ mapr dbshell
 
