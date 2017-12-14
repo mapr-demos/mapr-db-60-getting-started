@@ -13,7 +13,7 @@ You will learn how to optimize query using MapR-DB Secondary indexes.
 
 **Prerequisites**
 
-* MapR Converged Data Platform 6.0 with Apache Drill OR [MapR Developer Sandbox Container](https://maprdocs.mapr.com/home/MapRContainerDevelopers/MapRContainerDevelopersOverview.html).
+* MapR Converged Data Platform 6.0 with Apache Drill OR [MapR Container for Developers](https://maprdocs.mapr.com/home/MapRContainerDevelopers/MapRContainerDevelopersOverview.html).
 * JDK 8
 * Maven 3.x
 
