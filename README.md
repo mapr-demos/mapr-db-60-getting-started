@@ -82,8 +82,11 @@ You have now 3 JSON tables, let's query these tables using SQL with Apache Drill
 MapR-DB JSON tables allow us to set permissions in order restrict access to data. You can find more information [**here**](https://maprdocs.mapr.com/home/SecurityGuide/EnablingTableAuthorizations.html).
 
 To make it simple for now we'll just set `readperm` and `writeperm` to `public` access. This means that anyone can read from table and write to the table. We'll apply this change to the `default` column family because all of the data in our case resides in default cf.
+
 ```
 maprcli table cf edit -path /apps/business -cfname default -readperm p -writeperm p
+maprcli table cf edit -path /apps/review -cfname default -readperm p -writeperm p
+maprcli table cf edit -path /apps/user -cfname default -readperm p -writeperm p
 ```
 
 > Refer to [**table cf edit command**](https://maprdocs.mapr.com/home/ReferenceGuide/table-cf-edit.html) for more details about the CLI command.
@@ -151,7 +154,7 @@ Let's now add indices to the user table.
 In a terminal window:
 
 ```
-$ maprcli table index add -path /apps/user -index idx_support -indexedfields '"support":1'
+$ maprcli table index add -path /apps/user -index idx_support -indexedfields 'support:1'
 ```
 
 After waiting a minute for MapR-DB to add the index, open MapR-DB Shell and repeat the query to find all users with support equal to gold. This query should run much faster now.
@@ -206,7 +209,7 @@ Execute the query multiple times and looks at the execution time.
 You can now improve the performance of this query using an index. In a new terminal window run the following command to create an index on the `stars` field sorted in descending order (`-1`).
 
 ```
-$ maprcli table index add -path /apps/business -index idx_stars -indexedfields '"stars":-1'
+$ maprcli table index add -path /apps/business -index idx_stars -indexedfields 'stars:-1'
 ```
 
 If you execute the query, multiple times, now it should be faster, since the index is used.
@@ -244,7 +247,7 @@ Let's recreate the index on `stars` field and add the `name` to the list of incl
 # if you have not deleted the index yet
 $ maprcli table index remove -path /apps/business -index idx_stars  
 
-$ maprcli table index add -path /apps/business -index idx_stars -indexedfields '"stars":-1' -includedfields '"name"'
+$ maprcli table index add -path /apps/business -index idx_stars -indexedfields 'stars:-1' -includedfields 'name'
 ```
 
 If you execute the query, multiple times, now it should be even faster than previous queries since Drill is doing a covered queries, only accessing the index.
@@ -258,7 +261,7 @@ sqlline> explain plan for select name, stars from dfs.`/apps/business` where sta
 
 The main change in the explain plan compare to previous queries is:
 
-* `coveredFields` attribute that show the fields used by the queries.
+* `includedFields` attribute that show the fields used by the queries.
 
 
 
