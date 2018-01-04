@@ -154,8 +154,7 @@ In a terminal window:
 $ maprcli table index add -path /apps/user -index idx_support -indexedfields '"support":1'
 ```
 
-
-In MapR-DB Shell, find all users with support equals to gold, and compare with previous query performance:
+After waiting a minute for MapR-DB to add the index, open MapR-DB Shell and repeat the query to find all users with support equal to gold. This query should run much faster now.
 
 ```
 maprdb mapr:> find /apps/user --where '{ "$eq" : {"support":"gold"} }' --f _id,name,support
@@ -174,7 +173,7 @@ Now that you are familiar with MapR-DB Shell, and you have seen the impact on in
 
 ## Querying the data using Drill
 
-Open a terminal and run `sqlline`:
+We will use the `sqlline` utility to connect to Drill. You will find that utility in the Drill installation folder, such as /opt/mapr/drill/drill-1.11.0/bin/.  Here is how to connect to the Drill service running on a cluster node called "mapr60" where Zookeeper is running:
 
 ```
 $ sqlline
@@ -182,8 +181,11 @@ $ sqlline
 sqlline> !connect jdbc:drill:zk=mapr60:5181
 ```
 
-Where `mapr60` is a node where Zookeeper is running, then enter the mapr username and password when prompted.
+To connect to the Drill service running in the Developer Sandbox container, run `sqlline` like this:
 
+```
+$ sqlline -u jdbc:drill:zk=localhost:5181 -n mapr
+```
 
 You can execute the same query that you have used in the previous example using a simple SQL statement:
 
