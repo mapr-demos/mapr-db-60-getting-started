@@ -169,7 +169,7 @@ Let's now add indices to the user table.
 In a terminal window:
 
 ```
-$ maprcli table index add -path /apps/user -index idx_support -indexedfields '"support":1'
+$ maprcli table index add -path /apps/user -index idx_support -indexedfields 'support:1'
 ```
 
 
@@ -222,7 +222,7 @@ Execute the query multiple times and looks at the execution time.
 You can now improve the performance of this query using an index. In a new terminal window run the following command to create an index on the `stars` field sorted in descending order (`-1`).
 
 ```
-$ maprcli table index add -path /apps/business -index idx_stars -indexedfields '"stars":-1'
+$ maprcli table index add -path /apps/business -index idx_stars -indexedfields 'stars:-1'
 ```
 
 If you execute the query, multiple times, now it should be faster, since the index is used.
@@ -260,7 +260,7 @@ Let's recreate the index on `stars` field and add the `name` to the list of incl
 # if you have not deleted the index yet
 $ maprcli table index remove -path /apps/business -index idx_stars  
 
-$ maprcli table index add -path /apps/business -index idx_stars -indexedfields '"stars":-1' -includedfields '"name"'
+$ maprcli table index add -path /apps/business -index idx_stars -indexedfields 'stars:-1' -includedfields 'name'
 ```
 
 If you execute the query, multiple times, now it should be even faster than previous queries since Drill is doing a covered queries, only accessing the index.
@@ -274,7 +274,7 @@ sqlline> explain plan for select name, stars from dfs.`/apps/business` where sta
 
 The main change in the explain plan compare to previous queries is:
 
-* `coveredFields` attribute that show the fields used by the queries.
+* `includedFields` attribute that show the fields used by the queries.
 
 
 
