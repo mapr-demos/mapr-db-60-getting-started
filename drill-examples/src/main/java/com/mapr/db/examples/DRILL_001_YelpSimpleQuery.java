@@ -25,7 +25,7 @@ public class DRILL_001_YelpSimpleQuery {
             Class.forName(JDBC_DRIVER);
             //Username and password have to be provided to obtain connection.
             //Ensure that the user provided is present in the cluster / sandbox
-            Connection connection = DriverManager.getConnection(DRILL_JDBC_URL, "mapr", "");
+            Connection connection = DriverManager.getConnection(DRILL_JDBC_URL, "root", "");
 
             Statement statement = connection.createStatement();
 
