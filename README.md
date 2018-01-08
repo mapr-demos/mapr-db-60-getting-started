@@ -13,7 +13,7 @@ You will learn how to optimize query using MapR-DB Secondary indexes.
 
 **Prerequisites**
 
-* MapR Converged Data Platform 6.0 with Apache Drill OR [MapR Container for Developers](https://maprdocs.mapr.com/home/MapRContainerDevelopers/MapRContainerDevelopersOverview.html).
+* MapR Converged Data Platform 6.0 with Apache Drill or [MapR Container for Developers](https://maprdocs.mapr.com/home/MapRContainerDevelopers/MapRContainerDevelopersOverview.html).
 * JDK 8
 * Maven 3.x
 
@@ -27,7 +27,7 @@ Installation, Setup and further information can be found [**here**](https://mapr
 
 The application use the Yelp Academy Dataset that contains a list of Business and User Reviews.
 
-#### 1. Download the Yelp Dataset from [here](https://www.yelp.com/dataset_challenge)
+#### 1. Download the Yelp JSON Dataset from [here](https://www.yelp.com/dataset_challenge)
 
 #### 2. Unarchive the dataset
 
@@ -41,62 +41,47 @@ $ tar xvf yelp_dataset_challenge_round9.tar
 To do this, we first copy the file (say `business.json`) to the cluster node.
 ```
 $ cd dataset
-
-$ scp business.json root@<hostname>:/tmp/
-
-$ scp review.json root@<hostname>:/tmp/
-
-$ scp user.json root@<hostname>:/tmp/
+$ scp business.json review.json user.json root@<hostname>:/tmp/
 ```
 
-If you are working with Developer Sandbox container, you copy the file over to container.
+If you are working with Developer Sandbox container, it's faster to transfer files using `docker cp` instead of `scp`, so copy the Yelp JSON files to the container like this:
 ```
-$ docker cp business.json <container-id>:/tmp/
-
-$ docker cp review.json <container-id>:/tmp/
-
-$ docker cp user.json <container-id>:/tmp/
+$ docker cp business.json review.json user.json <container-id>:/tmp/
 ```
-Another option is to copy the entire **dataset** directory.
+where "container-id" can be obtained from the `docker ps` command.
 
 ##### 3b. Copy data in to MapR-XD
 
-There are two ways to put data in to MapR-XD
+There are two ways to put data into the MapR filesystem, called MapR-XD.
 
-- Simple copy, if [**MapR NFS**](https://maprdocs.mapr.com/home/AdministratorGuide/AccessDataWithNFS.html) is installed and the cluster is mounted at `/mapr`.
+- Simple copy, if [**MapR NFS**](https://maprdocs.mapr.com/home/AdministratorGuide/AccessDataWithNFS.html) is installed and the cluster is mounted at `/mapr`. 
 ```
-$ cp business.json /mapr/<cluster-name>/tmp/
-```
-
-When using the MapR Container For Developers,
-```
-$ cp business.json /mapr/maprdemo.mapr.io/tmp/
+$ cp business.json review.json user.json /mapr/<cluster-name>/tmp/
 ```
 
-- Run hadoop commands to put the data.
+- Run `hadoop fs` commands to put the data. The MapR Container For Developers does not include MapR NFS, so you will need to use this command to save the JSON files on the MapR filesystem.
 ```
-hadoop fs -put business.json /tmp/
+hadoop fs -put business.json review.json user.json /tmp/
 ```
 
 #### 4. Import the JSON documents into MapR-DB JSON tables
 
-```
+We will import the Yelp JSON documents into MapR-DB JSON tables using the [mapr importJSON](https://maprdocs.mapr.com/home/ReferenceGuide/mapr_importjson.html?hl=importjson) command. Note, the source file path specified in `mapr importJSON` must be a valid path in the MapR filesystem. 
 
+```
 $ mapr importJSON -idField business_id -src /tmp/business.json -dst /apps/business -mapreduce false
-
 $ mapr importJSON -idField review_id -src /tmp/review.json -dst /apps/review -mapreduce false
-
 $ mapr importJSON -idField user_id -src /tmp/user.json -dst /apps/user -mapreduce false
-
 ```
+
 > Refer to [**Loading Documents in to JSON Tables**](https://maprdocs.mapr.com/home/MapR-DB/JSON_DB/loading_documents_into_json_tables.html) for more details.
 
 You have now 3 JSON tables, let's query these tables using SQL with Apache Drill.
 
 #### 5. Give user permissions / public permissions to allow read / write.
-MapR-DB JSON tables have permissions associated in order restrict / allow access to tables / data. You can find more information [**here**](https://maprdocs.mapr.com/home/SecurityGuide/EnablingTableAuthorizations.html).
+MapR-DB JSON tables allow us to set permissions in order restrict access to data. You can find more information [**here**](https://maprdocs.mapr.com/home/SecurityGuide/EnablingTableAuthorizations.html).
 
-To make it simple for now let us changes the `readperm` and `writeperm` to `public` access. This means that anyone can read from table and write to the table. We change the permissions for the `default` column family because all of the data in our case resides in default cf.
+To make it simple for now we'll just set `readperm` and `writeperm` to `public` access. This means that anyone can read from table and write to the table. We'll apply this change to the `default` column family because all of the data in our case resides in default cf.
 
 ```
 maprcli table cf edit -path /apps/business -cfname default -readperm p -writeperm p
@@ -172,8 +157,7 @@ In a terminal window:
 $ maprcli table index add -path /apps/user -index idx_support -indexedfields 'support:1'
 ```
 
-
-In MapR-DB Shell, find all users with support equals to gold, and compare with previous query performance:
+After waiting a minute for MapR-DB to add the index, open MapR-DB Shell and repeat the query to find all users with support equal to gold. This query should run much faster now.
 
 ```
 maprdb mapr:> find /apps/user --where '{ "$eq" : {"support":"gold"} }' --f _id,name,support
@@ -192,7 +176,7 @@ Now that you are familiar with MapR-DB Shell, and you have seen the impact on in
 
 ## Querying the data using Drill
 
-Open a terminal and run `sqlline`:
+We will use the `sqlline` utility to connect to Drill. You will find that utility in the Drill installation folder, such as /opt/mapr/drill/drill-1.11.0/bin/.  Here is how to connect to the Drill service running on a cluster node called "mapr60" where Zookeeper is running:
 
 ```
 $ sqlline
@@ -200,8 +184,11 @@ $ sqlline
 sqlline> !connect jdbc:drill:zk=mapr60:5181
 ```
 
-Where `mapr60` is a node where Zookeeper is running, then enter the mapr username and password when prompted.
+To connect to the Drill service running in the Developer Sandbox container, run `sqlline` like this:
 
+```
+$ sqlline -u jdbc:drill:zk=localhost:5181 -n mapr
+```
 
 You can execute the same query that you have used in the previous example using a simple SQL statement:
 
