@@ -46,7 +46,9 @@ $ scp business.json review.json user.json root@<hostname>:/tmp/
 
 If you are working with Developer Sandbox container, it's faster to transfer files using `docker cp` instead of `scp`, so copy the Yelp JSON files to the container like this:
 ```
-$ docker cp business.json review.json user.json <container-id>:/tmp/
+$ docker cp business.json <container-id>:/tmp/
+$ docker cp review.json <container-id>:/tmp/
+$ docker cp user.json <container-id>:/tmp/
 ```
 where "container-id" can be obtained from the `docker ps` command.
 
@@ -84,9 +86,9 @@ MapR-DB JSON tables allow us to set permissions in order restrict access to data
 To make it simple for now we'll just set `readperm` and `writeperm` to `public` access. This means that anyone can read from table and write to the table. We'll apply this change to the `default` column family because all of the data in our case resides in default cf.
 
 ```
-maprcli table cf edit -path /apps/business -cfname default -readperm p -writeperm p
-maprcli table cf edit -path /apps/review -cfname default -readperm p -writeperm p
-maprcli table cf edit -path /apps/user -cfname default -readperm p -writeperm p
+$ maprcli table cf edit -path /apps/business -cfname default -readperm p -writeperm p
+$ maprcli table cf edit -path /apps/review -cfname default -readperm p -writeperm p
+$ maprcli table cf edit -path /apps/user -cfname default -readperm p -writeperm p
 ```
 
 > Refer to [**table cf edit command**](https://maprdocs.mapr.com/home/ReferenceGuide/table-cf-edit.html) for more details about the CLI command.
