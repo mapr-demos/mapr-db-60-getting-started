@@ -18,7 +18,7 @@ public class DRILL_001_YelpSimpleQuery {
      * 1. Connect to Zookeeper - "jdbc:drill:zk=<hostname/host-ip>:5181/drill/<cluster-name>-drillbits"
      * 2. Connect to Drillbit - "jdbc:drill:drillbit=<hostname>"
      */
-    private static String DRILL_JDBC_URL = "jdbc:drill:zk=maprdemo:5181/drill/maprdemo.mapr.io-drillbits";
+    private static String DRILL_JDBC_URL = "jdbc:drill:drillbit=maprdemo";
 
     public static void main( String[] args ) {
         try {
