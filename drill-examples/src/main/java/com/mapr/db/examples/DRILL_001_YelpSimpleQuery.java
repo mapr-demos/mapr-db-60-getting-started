@@ -11,7 +11,7 @@ import java.sql.Statement;
  */
 public class DRILL_001_YelpSimpleQuery {
     public static String JDBC_DRIVER = "org.apache.drill.jdbc.Driver";
-    public static String TABLE_NAME = "/mapr/maprdemo.mapr.io/apps/business";
+    public static String TABLE_NAME = "/mapr/demo.mapr.com/apps/business";
     
     /**
      * Can specify connection URL in 2 ways.
