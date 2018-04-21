@@ -3,7 +3,7 @@
     <parent>
         <artifactId>mapr-db-getting-started</artifactId>
         <groupId>com.mapr.db.examples</groupId>
-        <version>1.0-SNAPSHOT</version>
+        <version>6.0.0</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
