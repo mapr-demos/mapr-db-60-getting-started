@@ -9,7 +9,9 @@ import org.apache.spark.{SparkConf, SparkContext}
   * restaurant rated more than 3 stars.
   */
 object SPARK_001_YelpQueryRDD {
-  //Full path including namespace /mapr/<cluster-name>/apps/business
+  // Specify the table name with a path that includes the full MapR-FS namespace
+  // (e.g. /mapr/<cluster-name>/apps/business) or with an abbreviated path
+  // (e.g. /apps/business)
   val tableName: String = "/mapr/maprdemo.mapr.io/apps/business"
   def main(args: Array[String]): Unit = {
     val spark = new SparkConf().setAppName("SPARK_001_YelpQueryRDD").setMaster("local[*]")
@@ -18,6 +20,11 @@ object SPARK_001_YelpQueryRDD {
     val businessRDD = sc
       .loadFromMapRDB[Business](tableName).
       where(field("stars") > 3)
+
+    // Here's how you compare for equality. Note the three "=" signs:
+    sc.loadFromMapRDB[Business](tableName).where(field("stars") === 3).count
+    // Comparing for >= is pretty straightforward:
+    sc.loadFromMapRDB[Business](tableName).where(field("stars") >= 3).count
 
     println(businessRDD
       .map(business => (business.city, 1))

@@ -277,16 +277,36 @@ OJAI the Java API used to access MapR-DB JSON, leverages the same query engine t
 * `OJAI_004_YelpQueryAndDelete` : Delete the documents created in example 002 and 003.
 * `OJAI_005_YelpComplexQuery` : Retrieve all restaurants that have take-outs and a rating greater than 3. Also calculates the percentage of restaurants that offer take out, out of all restaurants in Las Vegas that have take-out information available.
 
+Here's an example run command:
+
+```
+java -cp ojai-examples/target/ojai-examples-1.0-SNAPSHOT.jar:./ojai-examples/target/* com.mapr.db.examples.OJAI_005_YelpComplexQuery
+```
+
 ## Working with Drill-JDBC
+
+JDBC is the standard interface for connecting Java applications to a database. The following example shows how to use JDBC to query a MapR-DB table from a Java application:
 
 * `DRILL_001_YelpSimpleQuery` : Retrieve all businesses that have at least 100 reviews and a rating greater than 3.
 
+Here's how to run it:
+```
+java -cp drill-examples/target/drill-examples-1.0-SNAPSHOT.jar:./drill-examples/target/* com.mapr.db.examples.DRILL_001_YelpSimpleQuery
+```
+
 ## Working with Spark-DB Connector
+
+The MapR-DB connector for Spark enables you to load and save Spark RDDs, DataFrames, and DataSets (which are all just tables of data in Spark) to MapR-DB. This is really a great connector, because it allows a distributed execution engine (Spark) to load and save data form a distributed database (MapR-DB).  The following examples shows how to use it in Scala:
 
 * `SPARK_001_YelpQueryRDD` : Retrieve `city` with most restaurants rated higher than 3 stars.
 
+The MapR docker container doesn't include Spark, but if you have a MapR cluster that does include Spark then you can run this example with spark-submit, like this:
 
-#### Run the sample application
+```
+/opt/mapr/spark/spark-*/bin/spark-submit --class com.mapr.db.examples.SPARK_001_YelpQueryRDD spark-examples/target/spark-examples-1.0-SNAPSHOT.jar
+```
+
+#### Run the sample applications
 
 **Build and the project**
 
@@ -301,7 +321,7 @@ This creates the following 3 jars.
 
 **Run the application**
 
-Run the following command:
+Run one of the provided applications. Here are a few example run commands:
 
 ```
 $ java -cp drill-examples/target/drill-examples-1.0-SNAPSHOT.jar:./drill-examples/target/* com.mapr.db.examples.DRILL_001_YelpSimpleQuery
