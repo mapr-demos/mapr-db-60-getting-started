@@ -48,6 +48,11 @@
 
     <dependencies>
         <dependency>
+            <artifactId>ojai-scala</artifactId>
+            <groupId>org.ojai</groupId>
+            <version>${ojai.version}</version>
+        </dependency>
+        <dependency>
             <groupId>org.scala-lang</groupId>
             <artifactId>scala-library</artifactId>
             <version>${scala.version}</version>
@@ -62,11 +67,15 @@
             <artifactId>spark-sql_2.11</artifactId>
             <version>${spark.version}</version>
         </dependency>
-
+        <dependency>
+            <groupId>com.mapr.db</groupId>
+            <artifactId>maprdb</artifactId>
+            <version>${mapr.library.version}</version>
+        </dependency>
         <dependency>
             <groupId>com.mapr.db</groupId>
             <artifactId>maprdb-spark</artifactId>
-            <version>${mapr.library.version}</version>
+            <version>${spark.version}</version>
         </dependency>
     </dependencies>
 
