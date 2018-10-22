@@ -35,7 +35,6 @@ public class OJAI_005_YelpComplexQuery {
                     .where(condition)
                     .orderBy("stars")
                     .build();
-//            Query query = driver.newQuery().orderBy("a").build();
 
 
             int totalCount = 0;
