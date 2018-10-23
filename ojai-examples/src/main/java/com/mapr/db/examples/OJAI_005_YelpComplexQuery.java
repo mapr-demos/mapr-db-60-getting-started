@@ -2,12 +2,7 @@ package com.mapr.db.examples;
 
 import org.ojai.Document;
 import org.ojai.DocumentStream;
-import org.ojai.store.Connection;
-import org.ojai.store.DocumentStore;
-import org.ojai.store.Driver;
-import org.ojai.store.DriverManager;
-import org.ojai.store.Query;
-import org.ojai.store.QueryCondition;
+import org.ojai.store.*;
 
 /**
  * Obtains details of all restaurants that have
@@ -41,11 +36,12 @@ public class OJAI_005_YelpComplexQuery {
                     .orderBy("stars")
                     .build();
 
+
             int totalCount = 0;
             try (final Connection connection = DriverManager.getConnection(OJAI_CONNECTION_URL);
                  final DocumentStore store = connection.getStore(TABLE_NAME);
-                 final DocumentStream stream = store.findQuery(query)) {
-                System.out.println("Query Plan: " + stream.getQueryPlan().asJsonString()); //Log Query Plan for debugging
+                 final DocumentStream stream = store.find(query)) {
+                System.out.println("Query Plan: " + ((QueryResult)stream).getQueryPlan().asJsonString()); //Log Query Plan for debugging
                 System.out.println("Restaurants in Las Vegas with take-out information: ");
                 for(Document document : stream) {
                     System.out.println(document.asJsonString());
@@ -71,8 +67,8 @@ public class OJAI_005_YelpComplexQuery {
             int takeOutCount = 0;
             try (final Connection connection = DriverManager.getConnection(OJAI_CONNECTION_URL);
                  final DocumentStore store = connection.getStore(TABLE_NAME);
-                 final DocumentStream stream = store.findQuery(query)) {
-                System.out.println("Query Plan: " + stream.getQueryPlan().asJsonString()); //Log Query Plan for debugging
+                 final DocumentStream stream = store.find(query)) {
+                System.out.println("Query Plan: " + ((QueryResult)stream).getQueryPlan().asJsonString()); //Log Query Plan for debugging
                 System.out.println("Restaurants in Las Vegas with take-outs: ");
                 for(Document document : stream) {
                     System.out.println(document.asJsonString());
