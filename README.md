@@ -32,23 +32,23 @@ The application use the Yelp Academy Dataset that contains a list of Business an
 #### 2. Unarchive the dataset
 
 ```
-$ tar xvf yelp_dataset_challenge_round9.tar
+$ tar xvf yelp_dataset.tar
 ```
 
 #### 3. Copy the dataset to MapR Cluster
 
 ##### 3a. Copy data to the node 
-To do this, we first copy the file (say `business.json`) to the cluster node.
+To do this, we first copy the file (say `yelp_academic_dataset_business.json`) to the cluster node.
 ```
 $ cd dataset
-$ scp business.json review.json user.json root@<hostname>:/tmp/
+$ scp yelp_academic_dataset_business.json yelp_academic_dataset_review.json yelp_academic_dataset_user.json root@<hostname>:/tmp/
 ```
 
 If you are working with Developer Sandbox container, it's faster to transfer files using `docker cp` instead of `scp`, so copy the Yelp JSON files to the container like this:
 ```
-$ docker cp business.json <container-id>:/tmp/
-$ docker cp review.json <container-id>:/tmp/
-$ docker cp user.json <container-id>:/tmp/
+$ docker cp yelp_academic_dataset_business.json <container-id>:/tmp/
+$ docker cp yelp_academic_dataset_review.json <container-id>:/tmp/
+$ docker cp yelp_academic_dataset_user.json <container-id>:/tmp/
 ```
 where "container-id" can be obtained from the `docker ps` command.
 
@@ -58,12 +58,12 @@ There are two ways to put data into the MapR filesystem, called MapR-XD.
 
 - Simple copy, if [**MapR NFS**](https://maprdocs.mapr.com/home/AdministratorGuide/AccessDataWithNFS.html) is installed and the cluster is mounted at `/mapr`. 
 ```
-$ cp business.json review.json user.json /mapr/<cluster-name>/tmp/
+$ cp yelp_academic_dataset_business.json yelp_academic_dataset_review.json yelp_academic_dataset_user.json /mapr/<cluster-name>/tmp/
 ```
 
 - Run `hadoop fs` commands to put the data. The MapR Container For Developers does not include MapR NFS, so you will need to use this command to save the JSON files on the MapR filesystem.
 ```
-hadoop fs -put business.json review.json user.json /tmp/
+hadoop fs -put yelp_academic_dataset_business.json yelp_academic_dataset_review.json yelp_academic_dataset_user.json /tmp/
 ```
 
 #### 4. Import the JSON documents into MapR-DB JSON tables
@@ -71,9 +71,9 @@ hadoop fs -put business.json review.json user.json /tmp/
 We will import the Yelp JSON documents into MapR-DB JSON tables using the [mapr importJSON](https://maprdocs.mapr.com/home/ReferenceGuide/mapr_importjson.html?hl=importjson) command. Note, the source file path specified in `mapr importJSON` must be a valid path in the MapR filesystem. 
 
 ```
-$ mapr importJSON -idField business_id -src /tmp/business.json -dst /apps/business -mapreduce false
-$ mapr importJSON -idField review_id -src /tmp/review.json -dst /apps/review -mapreduce false
-$ mapr importJSON -idField user_id -src /tmp/user.json -dst /apps/user -mapreduce false
+$ mapr importJSON -idField business_id -src /tmp/yelp_academic_dataset_business.json -dst /apps/business -mapreduce false
+$ mapr importJSON -idField review_id -src /tmp/yelp_academic_dataset_review.json -dst /apps/review -mapreduce false
+$ mapr importJSON -idField user_id -src /tmp/yelp_academic_dataset_user.json -dst /apps/user -mapreduce false
 ```
 
 > Refer to [**Loading Documents in to JSON Tables**](https://maprdocs.mapr.com/home/MapR-DB/JSON_DB/loading_documents_into_json_tables.html) for more details.
