@@ -38,7 +38,7 @@
     <mapr.library.version>6.1.0-mapr</mapr.library.version>
     <drill.version>1.14.0-mapr</drill.version>
     <ojai.version>3.0-mapr-1808</ojai.version>
-    <spark.version>2.3.1-mapr-1808</spark.version>
+    <spark.version>2.3.1-mapr-1808-r1</spark.version>
 
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <maven.compiler.source>1.8</maven.compiler.source>
