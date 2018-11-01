@@ -15,7 +15,7 @@
     <module>spark-examples</module>
   </modules>
 
-  <name>Getting Started with MapR-DB 6.1</name>
+  <name>Getting Started with MapR-DB 6.0.1</name>
 
   <licenses>
     <license>
@@ -35,10 +35,10 @@
     <log4j.version>1.2.17</log4j.version>
     <scala.version>2.11.5</scala.version>
 
-    <mapr.library.version>6.1.0-mapr</mapr.library.version>
-    <drill.version>1.14.0-mapr</drill.version>
-    <ojai.version>3.0-mapr-1808</ojai.version>
-    <spark.version>2.3.1-mapr-1808-r1</spark.version>
+    <mapr.library.version>6.0.1-mapr</mapr.library.version>
+    <drill.version>1.13.0-mapr</drill.version>
+    <ojai.version>2.0.1-mapr-1804</ojai.version>
+    <spark.version>2.2.1-mapr-1803</spark.version>
 
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <maven.compiler.source>1.8</maven.compiler.source>
