@@ -13,13 +13,13 @@ You will learn how to optimize query using MapR-DB Secondary indexes.
 
 **Prerequisites**
 
-* MapR Converged Data Platform 6.0 with Apache Drill or [MapR Container for Developers](https://maprdocs.mapr.com/home/MapRContainerDevelopers/MapRContainerDevelopersOverview.html).
-* JDK 8
+* HPE Ezmeral Data Fabric 6.2.0 with Apache Drill or [MapR Container for Developers](https://maprdocs.mapr.com/home/MapRContainerDevelopers/MapRContainerDevelopersOverview.html).
+* JDK 11
 * Maven 3.x
 
 ## Setting up MapR Container For Developers
 
-MapR Container For Developers is a docker image that enables you to quickly deploy a MapR environment on your developer machine.
+MapR Container For Developers is a docker image that enables you to quickly deploy an HPE Ezmeral Data Fabric environment on your developer machine.
 
 Installation, Setup and further information can be found [**here**](https://maprdocs.mapr.com/home/MapRContainerDevelopers/MapRContainerDevelopersOverview.html).
 
@@ -37,7 +37,7 @@ $ tar xvf yelp_dataset.tar
 
 #### 3. Copy the dataset to MapR Cluster
 
-##### 3a. Copy data to the node 
+##### 3a. Copy data to the node
 To do this, we first copy the file (say `yelp_academic_dataset_business.json`) to the cluster node.
 ```
 $ cd dataset
@@ -56,7 +56,7 @@ where "container-id" can be obtained from the `docker ps` command.
 
 There are two ways to put data into the MapR filesystem, called MapR-XD.
 
-- Simple copy, if [**MapR NFS**](https://maprdocs.mapr.com/home/AdministratorGuide/AccessDataWithNFS.html) is installed and the cluster is mounted at `/mapr`. 
+- Simple copy, if [**MapR NFS**](https://maprdocs.mapr.com/home/AdministratorGuide/AccessDataWithNFS.html) is installed and the cluster is mounted at `/mapr`.
 ```
 $ cp yelp_academic_dataset_business.json yelp_academic_dataset_review.json yelp_academic_dataset_user.json /mapr/<cluster-name>/tmp/
 ```
@@ -68,7 +68,7 @@ hadoop fs -put yelp_academic_dataset_business.json yelp_academic_dataset_review.
 
 #### 4. Import the JSON documents into MapR-DB JSON tables
 
-We will import the Yelp JSON documents into MapR-DB JSON tables using the [mapr importJSON](https://maprdocs.mapr.com/home/ReferenceGuide/mapr_importjson.html?hl=importjson) command. Note, the source file path specified in `mapr importJSON` must be a valid path in the MapR filesystem. 
+We will import the Yelp JSON documents into MapR-DB JSON tables using the [mapr importJSON](https://maprdocs.mapr.com/home/ReferenceGuide/mapr_importjson.html?hl=importjson) command. Note, the source file path specified in `mapr importJSON` must be a valid path in the MapR filesystem.
 
 ```
 $ mapr importJSON -idField business_id -src /tmp/yelp_academic_dataset_business.json -dst /apps/business -mapreduce false
@@ -145,7 +145,7 @@ Let's add the support status "gold" to an existing user, and find all users with
 maprdb mapr:> update /apps/user --id l52TR2e4p9K4Z9zezyGKfg --m '{ "$set" : [ {"support" : "gold" } ] }'
 
 
-maprdb mapr:> find /apps/user --where '{ "$eq" : {"support":"gold"} }' --f _id,name,support 
+maprdb mapr:> find /apps/user --where '{ "$eq" : {"support":"gold"} }' --f _id,name,support
 
 ```
 
@@ -168,7 +168,7 @@ maprdb mapr:> find /apps/user --where '{ "$eq" : {"support":"gold"} }' --f _id,n
 
 **7. Using MapR DB Shell Query Syntax**
 
-MapR-DB Shell has a complete JSON syntax to express the query including projection, condition, orderby, limit, skip. For example 
+MapR-DB Shell has a complete JSON syntax to express the query including projection, condition, orderby, limit, skip. For example
 
 ```
 maprdb mapr:> find /apps/user --q ' { "$select" : ["_id","name","support"]  ,"$where" : {"$eq" : {"support":"gold"}}, "$limit" : 2 }'
@@ -239,7 +239,7 @@ $ maprcli table index remove -path /apps/business -index idx_stars
 
 **Covering Queries**
 
-In the index you have created in the previous step, we have specific the `-indexedfields` parameter to set the index key with the `stars` values. It is also possible to add some non indexed field to the index using the `-includedfields`. 
+In the index you have created in the previous step, we have specific the `-indexedfields` parameter to set the index key with the `stars` values. It is also possible to add some non indexed field to the index using the `-includedfields`.
 
 In this case the index includes some other fields that could be used by applications to allow the query to only access the index without having to retrieve any value from the JSON table itself.
 
@@ -349,8 +349,3 @@ You can also look at the following examples:
 
 * [Ojai 2.0 Examples](https://github.com/mapr-demos/ojai-2-examples) to learn more about OJAI 2.0 features
 * [MapR-DB Change Data Capture](https://github.com/mapr-demos/mapr-db-cdc-sample) to capture database events such as insert, update, delete and react to this events.
-
-
-
-
-
