@@ -1,4 +1,8 @@
 #!/bin/bash
+#########################################################################################################
+#This script will help to deploy an HPE Ezmeral Data Fabric 6.2.0 environment on your developer machine #
+#For more details please refer the documentation                                                        #
+#########################################################################################################
 set -x
 IMAGE="maprtech/dev-sandbox-container:latest"
 INTERFACE="en0"
