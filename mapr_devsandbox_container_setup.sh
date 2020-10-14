@@ -1,9 +1,22 @@
 #!/bin/bash
-
 set -x
+IMAGE="maprtech/dev-sandbox-container:latest"
+INTERFACE="en0"
+while [ $# -gt 0 ]
+do
+  case "$1" in
+  -image) shift; IMAGE=$1;;
+  -nwiterface) shift; INTERFACE=$1;;
+  esac
+  shift
+done
 
-IMAGE="${1:-"maprtech/dev-sandbox-container:latest"}"
-IP=$(ipconfig getifaddr en0)
+which ipconfig
+if [ $? -eq 0 ]; then
+  IP=$(ipconfig getifaddr $INTERFACE)
+else
+  IP=$(ip addr show $INTERFACE | grep -w inet | awk '{ print $2}' | cut -d "/" -f1)
+fi
 clusterName="${clusterName:-"maprdemo.mapr.io"}"
 hostName=$(echo ${clusterName} | cut -d '.' -f 1)
 
@@ -15,9 +28,16 @@ runMaprImage() {
 
 	PORTS='-p 9998:9998 -p 8042:8042 -p 8888:8888 -p 8088:8088 -p 9997:9997 -p 10001:10001 -p 8190:8190 -p 8243:8243 -p 2222:22 -p 4040:4040 -p 7221:7221 -p 8090:8090 -p 5660:5660 -p 8443:8443 -p 19888:19888 -p 50060:50060 -p 18080:18080 -p 8032:8032 -p 14000:14000 -p 19890:19890 -p 10000:10000 -p 11443:11443 -p 12000:12000 -p 8081:8081 -p 8002:8002 -p 8080:8080 -p 31010:31010 -p 8044:8044 -p 8047:8047 -p 11000:11000 -p 2049:2049 -p 8188:8188 -p 7077:7077 -p 7222:7222 -p 5181:5181 -p 5661:5661 -p 5692:5692 -p 5724:5724 -p 5756:5756 -p 10020:10020 -p 50000-50050:50000-50050 -p 9001:9001 -p 5693:5693 -p 9002:9002 -p 31011:31011'
 	#export MAPR_EXTERNAL="0.0.0.0"
-	export MAPR_EXTERNAL=$(ipconfig getifaddr en0)
+  #incase non-mac ipconfig command would not be found
+  which ipconfig
+  if [ $? -eq 0 ]; then
+    export MAPR_EXTERNAL=$(ipconfig getifaddr $INTERFACE)
+  else
+    export MAPR_EXTERNAL=$(ip addr show $INTERFACE | grep -w inet | awk '{ print $2}' | cut -d "/" -f1)
+  fi
+	echo $MAPR_EXTERNAL
 
-    if [ "${IMAGE}" == "maprtech/dev-sandbox-container:latest" ]; then docker pull ${IMAGE}; fi
+  if [ "${IMAGE}" == "maprtech/dev-sandbox-container:latest" ]; then docker pull ${IMAGE}; fi
 	docker run -d --privileged -v /tmp/maprdemo/zkdata:/opt/mapr/zkdata -v /tmp/maprdemo/pid:/opt/mapr/pid  -v /tmp/maprdemo/logs:/opt/mapr/logs  -v /tmp/maprdemo/nfs:/mapr $PORTS -e MAPR_EXTERNAL -e clusterName -e isSecure --hostname ${clusterName} ${IMAGE} > /dev/null 2>&1
 
    # Check if docker container is started wihtout any issue
@@ -36,8 +56,8 @@ runMaprImage() {
     fi
 }
 
-docker ps -a | grep dev-sandbox-container > /dev/null 2>&1 
-if [ $? -ne 0 ] 
+docker ps -a | grep dev-sandbox-container > /dev/null 2>&1
+if [ $? -ne 0 ]
 then
 	STATUS='NOTRUNNING'
 else
@@ -51,19 +71,19 @@ else
 		CID=$(docker ps -a | grep dev-sandbox-container | awk '{ print $1 }' )
 		docker rm -f $CID > /dev/null 2>&1
 		STATUS='NOTRUNNING'
-	else 
+	else
 		STATUS='RUNNING'
-	fi	
+	fi
 fi
 
 if [ "$STATUS" == "RUNNING" ]
 then
 	# There is an instance of dev-sandbox-container. Check if it is running or not.
 	CID=$(docker ps -a | grep dev-sandbox-container | awk '{ print $1 }' )
-	RUNNING=$(docker inspect --format="{{.State.Running}}" $CID 2> /dev/null)	
+	RUNNING=$(docker inspect --format="{{.State.Running}}" $CID 2> /dev/null)
 	if [ "$RUNNING" == "true" ]
 	then
-		# Container is running there. 
+		# Container is running there.
 		# Change the IP in /etc/hosts and reconfigure client for the IP Change
 		# Change the server side settings and restart warden
 		grep maprdemo /etc/hosts | grep ${IP} > /dev/null 2>&1
