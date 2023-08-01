@@ -20,7 +20,7 @@ runMaprImage() {
     if [ "${IMAGE}" == "maprtech/dev-sandbox-container:latest" ]; then docker pull ${IMAGE}; fi
 	docker run -d --privileged -v /tmp/maprdemo/zkdata:/opt/mapr/zkdata -v /tmp/maprdemo/pid:/opt/mapr/pid  -v /tmp/maprdemo/logs:/opt/mapr/logs  -v /tmp/maprdemo/nfs:/mapr $PORTS -e MAPR_EXTERNAL -e clusterName -e isSecure --hostname ${clusterName} ${IMAGE} > /dev/null 2>&1
 
-   # Check if docker container is started wihtout any issue
+   # Check if docker container is started without any issue
    sleep 5 # wait for docker container to start
 
     CID=$(docker ps -a | grep dev-sandbox-container | awk '{ print $1 }' )
